@@ -1,0 +1,63 @@
+.MODEL SMALL
+.STACK 100H
+.DATA
+    ;VARIABLES WILL  BE DECLARED HERE   
+    MSG1 DB 'HI $'  
+    MSG2 DB 'SUM DONE $'
+.CODE
+    
+    MAIN PROC
+        
+        MOV AX , @DATA
+        MOV DS , AX
+        
+        LEA DX , MSG1
+        MOV AH, 9
+        INT 21H
+        
+        MOV AH, 1      ;INPUT
+        INT 21H
+        MOV BL, AL     ;SAVE INPUT IN BL 
+        INT 21H
+        MOV CL, AL
+        
+        
+        ADD BL,CL      ;BL = BL+CL
+        SUB BL,48      ;CONVERT ASCII TO DECIMAL
+        
+       
+        
+        MOV AH,2         ;NEWLINE
+        MOV DL, 0DH
+        INT 21H
+        MOV DL, 0AH
+        INT 21H
+
+        
+        
+        MOV AH, 2
+        MOV DL, BL
+        INT 21H  
+        
+        
+        
+        MOV AH,2         ;NEWLINE
+        MOV DL, 0DH
+        INT 21H        
+        MOV DL, 0AH
+        INT 21H        
+        
+        LEA DX , MSG2
+        MOV AH, 9
+        INT 21H
+        
+        
+        
+        MOV AH,4CH  
+        INT 21H   
+        
+    MAIN ENDP
+
+    ;OTHER PROCEDURES (IF ANY)
+
+END MAIN
