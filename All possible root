@@ -1,181 +1,101 @@
+//All possible root Bisection
 
 #include<bits/stdc++.h>
 using namespace std;
-#define error 0.01
 
-int arr[100];
-int prr[100];
+double hor[100];
+double error=0.01;
 int n;
-
-double f(double x)
+double func(double x)
 {
-    double res=arr[n];
-    for(int i=n-1; i>=0; i--)
-    {
-        res=res*x+arr[i];
-    }
+    double res=hor[n];
+    for(int i=n-1;i>=0;i--)
+        res=res*x+hor[i];
     return res;
 }
-
-double fp(double x)
-{
-    double res=prr[n-1];
-    for(int i=n-2; i>=0; i--)
-    {
-        res=res*x+prr[i];
-    }
-    return res;
-}
-
-void bisection(double a, double b)
-{
-    if (f(a)*f(b) >= 0)
-    {
-        printf("\nError interval ");
-        return;
-    }
-
-    int itr = 1;
-
-    double c = a;
-    while ((b-a) >= error)
-    {
-        c = (a+b)/2;
-
-        if (f(c) == 0.0)
-            break;
-
-        else if (f(c)*f(a) < 0)
-            b = c;
-        else
-            a = c;
-
-        printf("\n%d itr : Root %lf",itr++,c);
-    }
-    //printf("\nRoot %lf",c);
-}
-
-void falsePostion(double a,double b)
-{
-    if (f(a)*f(b) >= 0)
-    {
-        printf("\nError interval ");
-
-        return;
-    }
-
-    int itr = 1 ;
-
-    double c = a;
-
-    for (int i=0; i<n ; i++)
-    {
-        c = (a*f(b) - b*f(a))/ (f(b) - f(a));
-
-        if (f(c)==0)
-            break;
-
-        else if (f(c)*f(a) < 0)
-            b = c;
-        else
-            a = c;
-
-        printf("\n%d itr : Root %lf",itr++,c);
-    }
-    //printf("\nroot : %lf ",c);
-}
-
-void newtonRaphson(double a)
-{
-
-
-    double h = f(a) / fp(a);
-
-    int itr = 1;
-
-    while (abs(h) >= error)
-    {
-        h = f(a)/fp(a);
-        a = a - h;
-
-        printf("\n%d itr : Root %lf",itr++,a);
-    }
-    //printf("\nRoot %lf",a);
-}
-
-void secant(float x1, float x2)
-{
-    float n = 0,xm,x0;
-    int itr = 1;
-
-    if (f(x1) * f(x2) < 0)
-    {
-        do
-        {
-
-            x0 = (x1*f(x2) - x2*f(x1)) / (f(x2) - f(x1));
-
-
-            float c = f(x1) * f(x0);
-
-            x1 = x2;
-            x2 = x0;
-
-            n++;
-
-            if (c == 0)
-                break;
-
-            xm = (x1 * f(x2) - x2 * f(x1)) / (f(x2) - f(x1));
-
-            printf("\n%d itr : Root %lf",itr++,x0);
-
-        }
-        while (fabs(xm - x0) >= error);
-
-        //printf("\nRoot %lf",x0);
-    }
-    else
-
-        printf("Can not find a root in the given inteval");
-}
-
 
 int main()
 {
-    double a,b;
-
-    cout<<"enter degree: ";
+    int i,j,k;
     cin>>n;
-
-    for(int i=n; i>=0; i--)
+    for(i=n;i>=0;i--)
+        cin>>hor[i];
+    double a,b,dx=0.1;
+    cin>>a>>b;
+    while(1)
     {
-        cout<<"enter a"<<i<<endl;
-        cin>>arr[i];
+        double x1,x2,f1,f2;
+        x1=a;
+        x2=x1+dx;
+        f1=func(x1);
+        f2=func(x2);
+        if(f1*f2<0)
+        {
+            while(1)
+            {
+                f1=func(x1);
+                f2=func(x2);
+                double x0=(x1+x2)/2;
+                double f0=func(x0);
+                if(f1*f0<0)
+                    x2=x0;
+                else
+                    x1=x0;
+                double e=fabs((x2-x1)/x2);
+                if(e<=error)
+                {
+                    cout<<x0<<endl;
+                    break;
+                }
+            }
+        }
+        if(x2<b)
+            a=x2;
+        else
+            break;
     }
-
-    for(int i=n-1; i>=0; i--)
-    {
-        cout<<"enter prime"<<endl;
-        cin>>prr[i];
-    }
-
-    cout<<"Enter interval"<<endl;
-    cin>>a,b;
-
-    printf("\n\n\t Bisection Method :\n");
-    bisection(a,b);
-    printf("\n\n\t False Position Method :\n");
-    falsePostion(a,b);
-    printf("\n\n\t Newton Raphsan Method :\n");
-    newtonRaphson(a);
-    printf("\n\n\t secant Method :\n");
-    secant(a,b);
-
-    printf("\n\n");
-
-    return 0;
-
 }
 
+//All possible root Newton
 
+#include <bits/stdc++.h>
+
+using namespace std;
+double f(double x)
+{
+    return x*x-4*x-10;
+}
+double df(double x)
+{
+    return 2*x-4;
+}
+int nr(double x,double en)
+{
+    int cnt=0;
+    double prev=-9999.0;
+    while(x<=en)
+    {
+        double y=x;
+        double h = f(y) / df(y);
+        while (abs(h) >= 0.01)
+        {
+            h=f(y)/df(y);
+            y=y-h;
+        }
+        if(fabs(prev-y)<=0.001){
+            x++;
+            continue;
+        }
+        x++;
+        prev=y;
+        if(y>0 || y<=0)
+            cout << "The value of the root is : " << y<<endl;
+    }
+
+}
+int main()
+{
+    double st,en;
+    cin>>st>>en;
+    nr(st,en);
+}
